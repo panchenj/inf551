@@ -1,0 +1,27 @@
+#Feature
+- User Register
+
+#Get start with Flask
+- Template: Jinja2 (https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates)
+
+
+#Project Deployment
+Server:
+    ec2-52-11-92-116.us-west-2.compute.amazonaws.com
+    52.11.92.116
+Root Folder:
+    /home/ec2-user/movie
+
+
+
+--- 
+
+Ref
+1. The Flask Mega-Tutorial
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+
+Do NOT need to care about `virtualenv` or other environment related description, I will take care about it.
+
+2. Official document
+http://flask.pocoo.org/
+Everything you want to find.
