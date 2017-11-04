@@ -1,10 +1,6 @@
 #Feature
 - User Register
 
-#Get start with Flask
-- Template: Jinja2 (https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ii-templates)
-
-
 #Project Deployment
 Server:
     ec2-52-11-92-116.us-west-2.compute.amazonaws.com
