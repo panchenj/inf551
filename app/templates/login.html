@@ -3,35 +3,27 @@
 
 {% block content %}
     {% include 'flash.html' %}
-    <div class="well">
         <h3>Please Sign In</h3>
+ 
+
         <form class="form" action="" method="post" name="login">
             {{ form.hidden_tag() }}
 
-                <div class="controls">
-                    USERNAME
-                    {{ form.username(size=80, class="span4") }}
-                    PASSWORD
-                    {{ form.password(size=80, class="span4") }}
-
-
-                    {% for error in form.openid.errors %}
-                        <span class="help-inline">[{{ error }}]</span><br>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <label class="checkbox" for="remember_me">
-                        {{ form.remember_me }} Remember Me
-                    </label>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <input class="btn btn-primary" type="submit" value="Sign In">
-                </div>
-            </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            {{ form.username(size=80, class="form-control") }}
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            {{ form.password(size=80, class="form-control")}}        
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+            {{ form.remember_me }} Remember Me
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-    </div>
+
+
 {% endblock %}

@@ -1,0 +1,15 @@
+<table class="table table-hover">
+    <tr>
+        <td width="70px">
+        <a href="{{"http://www.rottentomatoes.com" + movie['url']}}"><img src="" />
+            <img src="{{movie['image']}}">
+        </a>
+        </td>
+        <td>
+            <p><strong>{{ movie["name"] }}</strong></p>
+            <p>{{ movie["subline"] }}</p>
+            <p>{{ movie["year"] }}</p>
+            <p>Score: {{ movie["meterScore"] }}</p>
+        </td>
+    </tr>
+</table>

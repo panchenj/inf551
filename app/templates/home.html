@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if movies %}
+test
+{% for m in movies %}
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ m.name,m.IMDB_rate }}
+	</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

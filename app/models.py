@@ -16,6 +16,13 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+class Movie(db.Model):
+    id= db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(64), index=True, unique=True)
+    IMDB_rate= db.Column(db.Float(), index=True)
+    def __repr__(self):
+        return '<Movie %r>' % (self.name)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -91,6 +98,7 @@ class User(db.Model):
         return '<User %r>' % (self.nickname)
 
 
+		
 class Post(db.Model):
     __searchable__ = ['body']
 

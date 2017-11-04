@@ -3,4 +3,7 @@
 
 {% block content %}
     {% include 'flash.html' %}
+    {% for movie in movies %}
+        {% include 'movie.html' %}
+    {% endfor %}
 {% endblock %}

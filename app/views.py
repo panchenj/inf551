@@ -5,8 +5,8 @@ from app import app, db, lm, oid
 from .forms import LoginForm, EditForm, PostForm, SearchForm
 from .models import User, Post
 from .emails import follower_notification
+from .crawler import fb
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
-
 
 @lm.user_loader
 def load_user(id):
@@ -33,13 +33,20 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-
+	
+@app.route("/test")
+def test():
+	return "Hello, World!"
+	
+	
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required
 def index(page=1):
+    movies = fb.getMovies()
     return render_template('index.html',
+                            movies=movies,
                            title='Home')
 
 
@@ -56,14 +63,28 @@ def login():
         if user.username == form.username.data and user.password == form.password.data:
             remember_me = False
             login_user(user, remember=remember_me)
-            return redirect(request.args.get('next') or url_for('index'))
+            #return redirect(request.args.get('home') or url_for('index'))
+            print(url_for("home"))
+            return redirect(url_for('home'))
         else:
-            flash("invalid username or pwd")
+            flash("invalid username or password")
     return render_template('login.html',
                            title='Sign In',
                            form=form,
-                           providers=app.config['OPENID_PROVIDERS'])
-
+                           )
+@app.route('/home')
+def home():
+    from app import models
+    movies=[]
+    movies.append(models.Movie(name="Spirited Away", IMDB_rate=9.0))	
+    movies.append(models.Movie(name="La La Land", IMDB_rate=8.2))
+    movies.append(models.Movie(name="Fifty Shades of Grey", IMDB_rate=4.1))
+    movies.append(models.Movie(name="The End of Evangelion", IMDB_rate=9.8))
+    movies.append(models.Movie(name="blank", IMDB_rate=9.9))
+    movies.append(models.Movie(name="blank 2", IMDB_rate=9.9))
+    return render_template("home.html",title="Home",movies=movies)
+	
+						   
 @app.route('/logout')
 def logout():
     logout_user()
