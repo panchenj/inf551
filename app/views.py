@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from datetime import datetime
 from app import app, db, lm, oid
 from .forms import LoginForm, EditForm, PostForm, SearchForm
-from .models import User, Post
+from .models import User, Post, Movie
 from .emails import follower_notification
 from .crawler import fb
 from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
@@ -34,17 +34,16 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 	
-@app.route("/test")
-def test():
-	return "Hello, World!"
-	
 	
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
-@login_required
+@login_required #require login
 def index(page=1):
-    movies = fb.getMovies()
+
+    movies=db.session.query(Movie).order_by(Movie.id.desc())[0:5]
+    user=g.user
+
     return render_template('index.html',
                             movies=movies,
                            title='Home')
@@ -52,57 +51,48 @@ def index(page=1):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # illegal user or no user, redirect to login page
     if g.user is not None and g.user.is_authenticated:
+        # url_for obtain URL for a given view function 可以用来传参
         return redirect(url_for('index'))
+
     form = LoginForm()
     if form.validate_on_submit():
+        #session object will be avalable during this request and any future requests from the same client
         session['remember_me'] = form.remember_me.data
         # Begin login
         print(form.username)
         user = User.query.filter_by(username=form.username.data).first()
         if user.username == form.username.data and user.password == form.password.data:
             remember_me = False
+            #register this is a valid login
             login_user(user, remember=remember_me)
-            #return redirect(request.args.get('home') or url_for('index'))
-            print(url_for("home"))
-            return redirect(url_for('home'))
+            # If the user tries to access one of the affected URLs then it will be redirected to the login page automatically. Flask-Login will store the original URL as the next page, and it is up to us to return the user to this page once the login process completed
+            return redirect(request.args.get('next') or url_for('user'))
         else:
             flash("invalid username or password")
     return render_template('login.html',
                            title='Sign In',
                            form=form,
                            )
-@app.route('/home')
-def home():
-    from app import models
-    movies=[]
-    movies.append(models.Movie(name="Spirited Away", IMDB_rate=9.0))	
-    movies.append(models.Movie(name="La La Land", IMDB_rate=8.2))
-    movies.append(models.Movie(name="Fifty Shades of Grey", IMDB_rate=4.1))
-    movies.append(models.Movie(name="The End of Evangelion", IMDB_rate=9.8))
-    movies.append(models.Movie(name="blank", IMDB_rate=9.9))
-    movies.append(models.Movie(name="blank 2", IMDB_rate=9.9))
-    return render_template("home.html",title="Home",movies=movies)
-	
-						   
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
+@app.route("/user")
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
 @login_required
 def user(nickname, page=1):
     user = User.query.filter_by(nickname=nickname).first()
+    #user=g.user
     if user is None:
         flash('User %s not found.' % nickname)
         return redirect(url_for('index'))
-    posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html',
-                           user=user,
-                           posts=posts)
+                           user=user)
 
 
 @app.route('/edit', methods=['GET', 'POST'])

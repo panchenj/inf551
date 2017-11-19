@@ -16,15 +16,48 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+user_like_movie= db.Table(
+    "like",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("movie_id",db.Integer, db.ForeignKey("movie.id"))
+)
+
+rating_comment=db.Table(
+    "rate_comment",
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("movie_id",db.Integer, db.ForeignKey("movie.id")),
+    db.Column("content",db.String(300)),
+    db.Column("rating",db.Float)
+)
+
 class Movie(db.Model):
-    id= db.Column(db.Integer, primary_key=True)
-    name= db.Column(db.String(64), index=True, unique=True)
-    IMDB_rate= db.Column(db.Float(), index=True)
+    __tablename__="movie"
+    id=                    db.Column(db.Integer, primary_key=True)
+    name=              db.Column(db.String(64), index=True)
+    IMDB_rating=       db.Column(db.Float(), index=True)
+    tomato_rating=db.Column(db.Float(), index=True)
+    year=                db.Column(db.Integer, index= True)
+    image=db.Column(db.String(128), index=False)
+
+    def __repr__(self):
+        info="name: "+self.name
+
     def __repr__(self):
         return '<Movie %r>' % (self.name)
 
+    @staticmethod
+    def get_movies():
+        pass
+        db.session.query()
+
+
+    @staticmethod
+    def search_movie(self, key):
+        pass
+
 
 class User(db.Model):
+    __tablename__="user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password = db.Column(db.String(64), index=True, unique=True)
@@ -65,10 +98,7 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        try:
-            return unicode(self.id)  # python 2
-        except NameError:
-            return str(self.id)  # python 3
+        return str(self.id)  # python 3
 
     def avatar(self, size):
         return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % \
@@ -93,6 +123,14 @@ class User(db.Model):
             followers, (followers.c.followed_id == Post.user_id)).filter(
                 followers.c.follower_id == self.id).order_by(
                     Post.timestamp.desc())
+    def get_liked_movies(self):
+        pass
+
+    def like_movie(self, movie):
+        pass
+
+    def rate_movie(self, movie):
+        pass
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
@@ -106,7 +144,6 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
     def __repr__(self):
         return '<Post %r>' % (self.body)
 
