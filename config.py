@@ -11,7 +11,13 @@ OPENID_PROVIDERS = [
     {'name': 'Flickr', 'url': 'http://www.flickr.com/<username>'},
     {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'}]
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+import platform
+if platform.system()=="Linux":
+    SQLALCHEMY_DATABASE_URI = 'mysql://movie:inf551@localhost:3306/movie'
+else:
+    SQLALCHEMY_DATABASE_URI = 'mysql://movie:inf551@ec2-52-11-92-116.us-west-2.compute.amazonaws.com:3306/movie'
+#SQLALCHEMY_DATABASE_URI = 'mysql:///' + os.path.join(basedir, 'app.db')
+
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 WHOOSH_BASE = os.path.join(basedir, 'search.db')
 
