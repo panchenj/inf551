@@ -32,7 +32,6 @@ def not_found_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
-
 	
 	
 @app.route('/', methods=['GET', 'POST'])
@@ -43,11 +42,10 @@ def index(page=1):
 
     movies=db.session.query(Movie).order_by(Movie.id.desc())[0:5]
     user=g.user
-
+    
     return render_template('index.html',
                             movies=movies,
                            title='Home')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
