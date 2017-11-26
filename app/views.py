@@ -32,20 +32,23 @@ def not_found_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
-	
-	
+
+@app.route('/ranking')
+def ranking():
+    return render_template('movie.html')
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required #require login
 def index(page=1):
 
-    movies=db.session.query(Movie).order_by(Movie.id.desc())[0:5]
+    # movies=db.session.query(Movie).order_by(Movie.id.desc())[0:0]
     user=g.user
-    
+
     return render_template('index.html',
-                            movies=movies,
                            title='Home')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,9 +1,14 @@
 <!-- extend base layout -->
+
 {% extends "base.html" %}
 
 {% block content %}
     {% include 'flash.html' %}
-    {% for movie in movies %}
-        {% include 'movie.html' %}
-    {% endfor %}
+<div class="owl-carousel owl-theme moviebox">
+    <div class="moviebanner"><img src="{{ url_for('static',filename='1.jpg') }}"></div>
+    <div class="moviebanner"><img src="{{ url_for('static',filename='2.jpg') }}"></div>
+    <div class="moviebanner"><img src="{{ url_for('static',filename='3.jpg') }}"></div>
+</div>
+<div class="owl-carousel owl-theme indexbox"></div>
+
 {% endblock %}
